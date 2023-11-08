@@ -19,7 +19,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-        return "Error: division by zero";
+        throw new Error("Error: division by zero");
     }
     return a / b;
 }
@@ -44,8 +44,15 @@ const screen = document.getElementById('calculator');
 const numbers = document.querySelectorAll('.num');
 const operators = document.querySelectorAll('.operatorBtn');
 const equals = document.getElementById('equals');
-const clearBtn = document.getElementById('clear');
-const deleteBtn = document.getElementById('delete');
+const clearBtn = document.getElementById('clearBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const decimalBtn = document.getElementById('decimal');
+const lastOperation = document.getElementById('operation');
+
+decimalBtn.addEventListener('click', () => appendDecimal());
+clearBtn.addEventListener('click', clear);
+deleteBtn.addEventListener('click', deleteNumber);
+
 
 equals.addEventListener('click', evaluate);
 numbers.forEach((button) =>
@@ -62,6 +69,16 @@ function appendNumber(number) {
         resetScreen();
     screen.textContent += number;
 }
+function appendDecimal() {
+    if (shouldResetScreen) {
+        resetScreen();
+    }
+    if (!screen.textContent.includes('.')) {
+        screen.textContent += '.';
+    }
+}
+
+
 
 function resetScreen() {
     screen.textContent = '';
@@ -71,6 +88,7 @@ function resetScreen() {
 function clear() {
     resetScreen();
     screen.textContent = '0';
+    lastOperation.textContent = '';
     numberOne = '';
     numberTwo = '';
     operation = null;
@@ -78,6 +96,9 @@ function clear() {
 
 function deleteNumber() {
     screen.textContent = screen.textContent.toString().slice(0, -1);
+    if (screen.textContent === '') {
+        screen.textContent = '0';
+    }
 }
 
 function setOperation(operator) {
@@ -86,23 +107,30 @@ function setOperation(operator) {
     }
 
     numberOne = screen.textContent;
-    operation = operator;
+    operation = operator.replace('÷', '/').replace('−', '-').replace('×', '*');
+    lastOperation.textContent = `${numberOne} ${operation}`;
     shouldResetScreen = true;
 }
 
 function evaluate() {
     if (operation === null || shouldResetScreen) return;
-    if (operation === '÷' && screen.textContent === '0') {
-        alert("You can't divide by 0!");
-        return;
-    }
+    try {
+        if (operation === '÷' && screen.textContent === '0') {
+            alert("You can't divide by 0!");
+            return;
+        }
 
-    numberTwo = screen.textContent;
-    const result = operate(parseFloat(numberOne), parseFloat(numberTwo), operation);
-    screen.textContent = roundResult(result);
-    operation = null;
-    shouldResetScreen = true;
+        numberTwo = screen.textContent;
+        const result = operate(parseFloat(numberOne), parseFloat(numberTwo), operation);
+        lastOperation.textContent = `${numberOne} ${operation} ${numberTwo}`
+        screen.textContent = roundResult(result);
+        operation = null;
+        shouldResetScreen = true;
+    } catch (error) {
+        alert(error.message);
+    }
 }
+
 
 function roundResult(number) {
     return Math.round(number * 1000) / 1000

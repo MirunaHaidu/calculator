@@ -38,6 +38,7 @@ body {
     box-shadow: inset 2px 3px 5px 0px rgba(0,0,0,0.7);
     display: flex;
     justify-content: flex-end;
+   
 }
 
 .calculator{
@@ -46,7 +47,10 @@ body {
     font-size: 40px;
 }
 
-
+.operation{
+    padding: 5px;
+    font-size: 16px;
+}
 
 
 .buttons {
@@ -64,7 +68,6 @@ body {
     width: 100%;
     margin-top: 20px;
     margin-bottom: 10px;
-
 }
 
 .clear,
@@ -72,13 +75,17 @@ body {
     background-color: #f77f00;
     width: 150px;
     height: 50px;
+    border: none;
     border-radius: 10px;
     text-align: center;
     box-shadow: inset 2px 3px 5px 0px rgba(0,0,0,0.7);
     font-weight: bold;
     font-size: 16px;
-
-
+}
+.clear:hover,
+.delete:hover{
+    background-color: #fd982c;
+    color: #333;
 }
 
 .numbers {
@@ -89,10 +96,20 @@ body {
 }
 
 .numbers button {
+    border: none;
     border-radius: 33px;
     box-shadow: inset 2px 3px 5px 0px rgba(0,0,0,0.7);
     font-weight: bold;
     font-size: 21px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.numbers button:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.numbers button:active {
+    background-color: #ccc;
 }
 
 .operatorBtn{
